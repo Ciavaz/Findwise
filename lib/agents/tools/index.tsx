@@ -10,10 +10,10 @@ export interface ToolProps {
 
 export const getTools = ({ uiStream, fullResponse }: ToolProps) => {
   const tools: any = {
-    search: searchTool({
-      uiStream,
-      fullResponse
-    }),
+    // search: searchTool({
+    //   uiStream,
+    //   fullResponse
+    // }),
     retrieve: retrieveTool({
       uiStream,
       fullResponse

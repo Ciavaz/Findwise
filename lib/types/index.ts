@@ -4,6 +4,22 @@ export type SearchResults = {
   query: string
 }
 
+export type CatalogSearchResults = CatalogResultItem[]
+
+export type CatalogResultItem = {
+  product_code: number,
+  nome: string,
+  marchio: string,
+  tipologia_prodotto: string,
+  prezzo: number,
+  text: string
+  colore: string,
+  mw_marketing_text: string,
+  link: string
+  link_immagine: string
+}
+
+
 export type ExaSearchResults = {
   results: ExaSearchResultItem[]
 }

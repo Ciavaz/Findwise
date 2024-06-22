@@ -1,5 +1,5 @@
 import { createStreamableUI, createStreamableValue } from 'ai/rsc'
-import { CoreMessage, ToolCallPart, ToolResultPart, streamText } from 'ai'
+import { CoreMessage, ToolCallPart, ToolResultPart, streamText, generateText } from 'ai'
 import { getTools } from './tools'
 import { getModel, transformToolMessages } from '../utils'
 import { AnswerSection } from '@/components/answer-section'
@@ -30,6 +30,8 @@ export async function researcher(
   const result = await streamText({
     model: getModel(useSubModel),
     maxTokens: 2500,
+    temperature: 0.1,
+    presencePenalty: 0.2,
     system: `As a professional search expert, you possess the ability to search for any information on the web.
     or any information on the web.
     For each user query, utilize the search results to their fullest potential to provide additional information and assistance in your response.
@@ -45,6 +47,7 @@ export async function researcher(
       uiStream,
       fullResponse
     }),
+    
     onFinish: event => {
       // If the response is generated, update the generated answer section
       // There is a bug where a new instance of the answer section is displayed once when the next section is added
