@@ -60,6 +60,23 @@ export function getModel(useSubModel = false) {
   return openai.chat(openaiApiModel)
 }
 
+export function getModelForEmbedding(model = 'text-embedding-3-small') {
+  const openaiApiBase = process.env.OPENAI_API_BASE
+  const openaiApiKey = process.env.OPENAI_API_KEY
+
+  if (!(openaiApiBase && openaiApiKey)) {
+    throw new Error('Missing environment variables for OpenAI')
+  }
+
+  const openai = createOpenAI({
+    baseURL: openaiApiBase,
+    apiKey: openaiApiKey,
+    organization: ''
+  })
+
+return openai.embedding(model)
+}
+
 /**
  * Takes an array of AIMessage and modifies each message where the role is 'tool'.
  * Changes the role to 'assistant' and converts the content to a JSON string.

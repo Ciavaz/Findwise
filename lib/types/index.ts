@@ -1,3 +1,16 @@
+export type ProductSearchResult = {
+  id: number
+  title: string
+  price: number
+  link: string
+  link_image: string
+  breadcrumb_all: string | null
+  marketing_text: string | null
+  description: string | null
+  product_specification: string | null
+  similarity: number 
+}
+
 export type SearchResults = {
   images: string[]
   results: SearchResultItem[]

@@ -1,6 +1,7 @@
 import { createStreamableUI } from 'ai/rsc'
 import { retrieveTool } from './retrieve'
 import { searchTool } from './search'
+import { productSearchTool } from './product-search'
 import { videoSearchTool } from './video-search'
 
 export interface ToolProps {
@@ -10,22 +11,28 @@ export interface ToolProps {
 
 export const getTools = ({ uiStream, fullResponse }: ToolProps) => {
   const tools: any = {
-    search: searchTool({
-      uiStream,
-      fullResponse
-    }),
-    retrieve: retrieveTool({
-      uiStream,
-      fullResponse
-    })
+    productSearch: productSearchTool(
+      {
+        uiStream,
+        fullResponse
+      }
+    )
+    // search: searchTool({
+    //   uiStream,
+    //   fullResponse
+    // }),
+    // retrieve: retrieveTool({
+    //   uiStream,
+    //   fullResponse
+    // })
   }
 
-  if (process.env.SERPER_API_KEY) {
-    tools.videoSearch = videoSearchTool({
-      uiStream,
-      fullResponse
-    })
-  }
+  // if (process.env.SERPER_API_KEY) {
+  //   tools.videoSearch = videoSearchTool({
+  //     uiStream,
+  //     fullResponse
+  //   })
+  // }
 
   return tools
 }
