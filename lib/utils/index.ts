@@ -64,7 +64,7 @@ export function getModelForEmbedding(model = 'text-embedding-3-small') {
   const openaiApiBase = process.env.OPENAI_API_BASE
   const openaiApiKey = process.env.OPENAI_API_KEY
 
-  if (!(openaiApiBase && openaiApiKey)) {
+  if (!openaiApiKey) {
     throw new Error('Missing environment variables for OpenAI')
   }
 

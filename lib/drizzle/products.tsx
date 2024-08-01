@@ -10,7 +10,7 @@ import {
   } from 'drizzle-orm/pg-core'
 
   export const products = pgTable(
-    'products',
+    'products_2',
     {
       id: serial('id')
         .primaryKey()
@@ -19,6 +19,7 @@ import {
       brand: text('brand').notNull(),
       availability: text('availability').notNull(),
       price: real('price').notNull(),
+      category: text('category').notNull(),
       online_recommended_retail_price: real('online_recommended_retail_price'),
       online_strike_price: real('online_strike_price'),
       breadcrumb_all: text('breadcrumb_all'),
@@ -42,6 +43,7 @@ import {
       list_of_other_services: text('list_of_other_services'),
       list_of_accessory_bundle: text('list_of_accessory_bundle'),
       item_group_id: text('item_group_id'),
+      text: text('text'),
       embedding: vector('embedding', { dimensions: 1536 }),
     },
     (table) => ({

@@ -5,6 +5,7 @@ export type ProductSearchResult = {
   link: string
   link_image: string
   breadcrumb_all: string | null
+  category: string
   marketing_text: string | null
   description: string | null
   product_specification: string | null

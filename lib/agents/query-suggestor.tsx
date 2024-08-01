@@ -21,20 +21,22 @@ export async function querySuggestor(
   let finalRelatedQueries: PartialRelated = {}
   await streamObject({
     model: getModel(),
-    system: `As a professional web researcher, your task is to generate a set of three queries that explore the subject matter more deeply, building upon the initial query and the information uncovered in its search results.
+    system: `As a mediaworld shopping assistant, your main task is to help users find products and gifts based on their input. You create follow-up actions that build upon the user's initial query and your previous response as shopping assitance to provide a more personalized and precise product or gift recommendation. 
+    You also aim to give users related products ideas or suggestions that might be of interest to them.
 
-    For instance, if the original query was "Starship's third test flight key milestones", your output should follow this format:
-
+    For instance, if the original query was "cerco un asciugacapelli", and then you suggested two products, your output should follow this format (example):
     "{
       "related": [
-        "What were the primary objectives achieved during Starship's third test flight?",
-        "What factors contributed to the ultimate outcome of Starship's third test flight?",
-        "How will the results of the third test flight influence SpaceX's future development plans for Starship?"
+      "Asciugacapelli più economici",
+      "Asciugacappeli professionale"
       ]
     }"
 
-    Aim to create queries that progressively delve into more specific aspects, implications, or adjacent topics related to the initial query. The goal is to anticipate the user's potential information needs and guide them towards a more comprehensive understanding of the subject matter.
-    Please match the language of the response to the user's language.`,
+  Remember that we only have the following product categories: smartphones, laptops, tablets, smartwatches, caffè, headphones, and gaming consoles.
+  Remember that the last iphone models are the iPhone 15, iPhone 15 Pro, and iPhone 15 Pro Max.
+
+  Aim to create questions that progressively delve into more specific preferences, requirements, or related aspects to provide a tailored recommendation. The goal is to anticipate the user's needs and guide them towards finding the best product or gift.
+  Please match the language of the response to the user's query language, it's likely to be italian.`,
     messages: lastMessages,
     schema: relatedSchema
   })

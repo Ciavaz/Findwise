@@ -2,9 +2,9 @@ import { tool, embed } from 'ai'
 import { createStreamableValue } from 'ai/rsc'
 import { productSearchSchema } from '@/lib/schema/product-search'
 import { products, SelectProducts } from '@/lib/drizzle/products'
-import { SearchSection } from '@/components/search-section'
+import { ProductSearchSection } from '@/components/products-search-section'
 import { getModelForEmbedding } from '../../utils'
-import { desc, sql, cosineDistance, gt, lte, like, and } from 'drizzle-orm'
+import { desc, asc, sql, cosineDistance, gt, lte, like, and, max, eq } from 'drizzle-orm'
 import { db } from '@/lib/drizzle/db'
 import { ProductSearchResult } from '@/lib/types'
 
@@ -17,15 +17,17 @@ export const productSearchTool = ({ uiStream, fullResponse }: ToolProps) => tool
     execute: async ({
       query,
       max_price,
-      category
+      category,
+      technical_specifications_needed
     }) => {
       let hasError = false
       // Append the search section
-      const streamResults = createStreamableValue<string>()
+      const streamResults = createStreamableValue<ProductSearchResult[]>()
 
       uiStream.update(
-        <SearchSection
-          result={streamResults.value}
+        <ProductSearchSection
+          query={query}
+          productsResults={streamResults.value}
         />
       )
       
@@ -33,7 +35,7 @@ export const productSearchTool = ({ uiStream, fullResponse }: ToolProps) => tool
       let searchResult
       try {
         searchResult = await pgVectorSearch(query, 10, max_price, category ? category : '')     
-
+        console.log('searchResult', searchResult)
       } catch (error) {
         console.error('Search API error:', error)
         hasError = true
@@ -52,9 +54,25 @@ export const productSearchTool = ({ uiStream, fullResponse }: ToolProps) => tool
         streamResults.done()
         return searchResult
       }
-  
-      streamResults.done(JSON.stringify(searchResult))
-  
+      
+      streamResults.done(searchResult as ProductSearchResult[])
+      
+      if (Array.isArray(searchResult)) {
+        // Limit the number of results to 4, as it will enhance rapid response.
+        searchResult = searchResult.slice(0, 4)
+        // Remove the embedding from the response
+        searchResult = searchResult.map((product) => {
+          return {
+            title: product.title,
+            price: product.price,
+            marketing_text: product.marketing_text,
+            description: product.description,
+            product_specification: technical_specifications_needed ? product.product_specification : '', // Return empty string if technical specifications are not needed
+          }
+        }
+        )
+      }
+
       return searchResult
     }
   })
@@ -85,8 +103,12 @@ async function pgVectorSearch(
         const similarity = sql<number>`1 - (${cosineDistance(
             products.embedding,
             vectorQuery
-        )})`
-    
+        )})`  
+        
+        console.log(query)
+        console.log(max_price)
+        console.log(category)
+
         const productsResults = await db
             .select({ 
                 id: products.id,
@@ -94,16 +116,17 @@ async function pgVectorSearch(
                 price: products.price,
                 link: products.link,
                 link_image: products.image_link,
+                category: products.category,
                 marketing_text: products.marketing_text,
                 breadcrumb_all : products.breadcrumb_all,
                 description: products.description,
                 product_specification: products.product_specification,  
                 similarity })
             .from(products)
-            .where(and(gt(similarity, 0.4), lte(products.price, max_price), like(products.breadcrumb_all, category ? `%${category}%` : '%%')))
+            .where(and(gt(similarity, 0.5), lte(products.price, max_price), eq(products.category, category)))
             .orderBy((t) => desc(t.similarity))
-
             .limit(maxResults)
+
         return productsResults
 
         } catch (error) {
@@ -111,40 +134,3 @@ async function pgVectorSearch(
             throw error
         }
     }
-
-
-    
-
-async function tavilySearch(
-    query: string,
-    maxResults: number = 10,
-    searchDepth: 'basic' | 'advanced' = 'basic',
-    includeDomains: string[] = [],
-    excludeDomains: string[] = []
-  ): Promise<any> {
-    const apiKey = process.env.TAVILY_API_KEY
-    const response = await fetch('https://api.tavily.com/search', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        api_key: apiKey,
-        query,
-        max_results: maxResults < 5 ? 5 : maxResults,
-        search_depth: searchDepth,
-        include_images: true,
-        include_answers: true,
-        include_domains: includeDomains,
-        exclude_domains: excludeDomains
-      })
-    })
-  
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`)
-    }
-  
-    const data = await response.json()
-    return data
-  }
-  
