@@ -19,7 +19,7 @@ export const productSearchSchema = z.object({
     'Clima e Riscaldamento',
     'Pulizia e Stiro',
     'Smart Home e Domotica',
-    'PC Gaming',
+    'Gaming',
     'Console e Videogiochi'
   ]).describe('The category of the product the user is searching for'),
   technical_specifications_needed: z.boolean().describe('Whether technical specifications for the products are relavant to anwer the user query'),

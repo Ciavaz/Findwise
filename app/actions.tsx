@@ -24,6 +24,8 @@ import { VideoSearchSection } from '@/components/video-search-section'
 import { transformToolMessages } from '@/lib/utils'
 import { AnswerSection } from '@/components/answer-section'
 import { ErrorCard } from '@/components/error-card'
+import { ProductSearchSection } from '@/components/products-search-section'
+
 import { use } from 'react'
 
 async function submit(
@@ -231,7 +233,7 @@ async function submit(
       const relatedQueries = await querySuggestor(uiStream, processedMessages)
       // Add follow-up panel
       uiStream.append(
-        <Section title="Follow-up">
+        <Section title="Come posso aiutarti?">
           <FollowupPanel />
         </Section>
       )
@@ -259,7 +261,7 @@ async function submit(
       streamText.done()
       uiStream.append(
         <ErrorCard
-          errorMessage={answer || 'An error occurred. Please try again.'}
+          errorMessage={answer || 'Abbiamo riscontrato un errore, riprova per favore.'}
         />
       )
     }
@@ -401,7 +403,7 @@ export const getUIStateFromAIState = (aiState: Chat) => {
             case 'answer':
               return {
                 id,
-                component: <AnswerSection result={answer.value} />
+                component: <AnswerSection result={answer.value} hasHeader={false}/>
               }
             case 'related':
               const relatedQueries = createStreamableValue()
@@ -416,7 +418,7 @@ export const getUIStateFromAIState = (aiState: Chat) => {
               return {
                 id,
                 component: (
-                  <Section title="Follow-up" className="pb-8">
+                  <Section title={undefined} className="pb-8">
                     <FollowupPanel />
                   </Section>
                 )
@@ -429,11 +431,21 @@ export const getUIStateFromAIState = (aiState: Chat) => {
             isCollapsed.done(true)
             const searchResults = createStreamableValue()
             searchResults.done(JSON.stringify(toolOutput))
+            const productSearchResults = createStreamableValue()
+            productSearchResults.done(toolOutput)
             switch (name) {
               case 'search':
                 return {
                   id,
                   component: <SearchSection result={searchResults.value} />,
+                  isCollapsed: isCollapsed.value
+                }
+              case 'productSearch':
+                return {
+                  id,
+                  component: (
+                    <ProductSearchSection query={''} productsResults={productSearchResults.value} />
+                  ),
                   isCollapsed: isCollapsed.value
                 }
               case 'retrieve':

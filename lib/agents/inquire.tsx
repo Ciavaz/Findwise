@@ -34,24 +34,28 @@ export async function inquire(
 
     Example for a gift inquiry:
     {
-      "question": "Che cosa hai in mente?",
+      "question": "Hai già qualcosa in mente?",
       "options": [
         {"value": "Smartphone", "label": "Smartphone"},
         {"value": "Laptop", "label": "Laptop"},
         {"value": "Cuffie", "label": "Cuffie"},
         {"value": "Elettrodomestici", "label": "Elettrodomestici"},
         {"value": "TV", "label": "TV"}
+        {"value": "No, suggeriscimi", "label": "No, suggeriscimi"}
       ],
       "allowsInput": false,
       "inputLabel": "If other, please specify",
       "inputPlaceholder": "Gaming console, TV, or other"
     }
+
     Guidelines:
 
-    Gift Queries: Ask about the recipient's age, preferences, and the user's budget.
-    Home Appliances/TVs: Inquire about specific features, size, and brand preferences.
-    General Queries: Seek clarification on the topic, context, or specific aspects of the query.
-    Budget: Ask, "How much are you willing to spend?" with predefined options for maximum price.
+    Example questions flow: 
+    Gift Queries: "Hai già qualcosa in mente?" -> "Per chi è il regalo?" -> "What is the recipient's age?" -> "Cosa gli piace fare?" ->  "What is the recipient's age?" -> "What is the occasion?" -> "What is your budget?" -> "What are the recipient's preferences?" 
+    Home Appliances/TVs: "How many people are in your household?" -> "What is your budget?" -> "What the size of the room/space where the appliance/TV will be placed?" -> Depending on the response, ask about specific features of the product.
+    Gaming Consoles: "What type of games do you like to play?" -> "Do you have a preference for a specific brand?" -> "Do you already have games or accessories?"
+    Notebook/Smartphone:  "What will you use the laptop for?" -> Depending on the answer make at least 3 specific relevants questions ->  "What is your budget?" 
+
     Product Range: Smartphones, Laptops, Gaming Consoles, Videogames, Caffè e Macchinette del Caffè, Headphones, Smartwatches, TVs, and Home Appliances (e.g., hair dryers, vacuum cleaners, refrigerators).
     If the user asks about a specific product, such as 'Iphone', you may opt to ask for additional details like storage capacity, color, or preferred brand to refine your search, if relevant.
 

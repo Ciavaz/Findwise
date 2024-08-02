@@ -1,5 +1,5 @@
 import { createStreamableUI, createStreamableValue } from 'ai/rsc'
-import { CoreMessage, ToolCallPart, ToolResultPart, streamText } from 'ai'
+import { CoreMessage, ToolCallPart, ToolResultPart, streamText, tool } from 'ai'
 import { getTools } from './tools'
 import { getModel, transformToolMessages } from '../utils'
 import { AnswerSection } from '@/components/answer-section'
@@ -26,7 +26,7 @@ export async function researcher(
   const useSubModel = useOllamaProvider && includeToolResponses
 
   const streambleAnswer = createStreamableValue<string>('')
-  const answerSection = <AnswerSection result={streambleAnswer.value} />
+  const answerSection = <AnswerSection result={streambleAnswer.value} hasHeader={false} />
 
   const currentDate = new Date().toLocaleString()
   const result = await streamText({
@@ -47,7 +47,8 @@ export async function researcher(
     Suggest just one product, focusing on the user's needs and preferences to ensure a personalized response and a positive shopping experience. If relevant, suggest an alternative product but in a lesser detail.
     You will be penalised if you talk about price of the products or variants, but focus on the features and benefits that match the user's query.
     Example response if the user ask for a smartphone for gaming or photography: "I recommend the new iPhone 15, featuring a 6.1-inch Super Retina XDR OLED display, A16 Bionic processor, 6 GB of RAM, and up to 512 GB of internal storage. It's perfect for gaming and photography, with a 48 MP main camera and robust battery life."
-
+    Avoid suggestic models that for sure will not satisfy the user's needs, like suggesting a smartphone with a small screen if the user asks for a big one.
+    Always provide a clear and concise response that directly addresses the user's query, avoiding unnecessary information or technical jargon.
 
     Remember, your goal is to provide knowledgeable service to help customers find the ideal electronics for their needs and budget, ensuring a positive shopping experience.
 
@@ -110,6 +111,8 @@ export async function researcher(
         break
     }
   }
+
+  cleanResponse(fullResponse)
   messages.push({
     role: 'assistant',
     content: [{ type: 'text', text: fullResponse }, ...toolCalls]
@@ -121,4 +124,28 @@ export async function researcher(
   }
 
   return { result, fullResponse, hasError, toolResponses, finishReason }
+}
+
+export function cleanResponse(response: string): string {
+  // A support function responsible for cleaning the response, it can be customized based on the response structure to solve common AI typos
+  // remove "inquiry: " from the response
+  response = response.replace(/inquiry: /g, '')
+  // remove any links markdown format from the response
+  // response = response.replace(/\[.*?\]\(.*?\)/g, '')
+
+  // if it finds a link in the response check if it is a link to a product of MediaWorld, if yes we add the utm parameters otherway we remove
+  response = response.replace(/\[.*?\]\(.*?\)/g, (match) => {
+    if (match.includes('mediaworld')) {
+      return match
+    } else {
+      return ''
+    }
+  })
+
+  // remove price in euro from the response (e.g. Prezzo: €1399.99.)
+  response = response.replace(/Prezzo: €\d+\.\d+\./g, '')
+  // remove price in euro from the response (e.g. Prezzo: €1399.99)
+  response = response.replace(/Prezzo: €\d+\.\d+/g, '')
+
+  return response
 }

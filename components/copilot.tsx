@@ -165,6 +165,7 @@ export const Copilot: React.FC<CopilotProps> = ({ inquiry }: CopilotProps) => {
                 name="additional_query"
                 className="w-full"
                 id="query"
+                maxLength={120}
                 placeholder={object?.inputPlaceholder}
                 value={query}
                 onChange={handleInputChange}
@@ -179,11 +180,11 @@ export const Copilot: React.FC<CopilotProps> = ({ inquiry }: CopilotProps) => {
               disabled={pending || isGenerating}
             >
               <FastForward size={16} className="mr-1" />
-              Skip
+              Salta
             </Button>
             <Button type="submit" disabled={isButtonDisabled || pending}>
               <ArrowRight size={16} className="mr-1" />
-              Send
+              Invia
             </Button>
           </div>
         </form>

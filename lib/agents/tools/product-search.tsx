@@ -30,12 +30,10 @@ export const productSearchTool = ({ uiStream, fullResponse }: ToolProps) => tool
           productsResults={streamResults.value}
         />
       )
-      
       // Tavily API requires a minimum of 5 characters in the query
       let searchResult
       try {
         searchResult = await pgVectorSearch(query, 10, max_price, category ? category : '')     
-        console.log('searchResult', searchResult)
       } catch (error) {
         console.error('Search API error:', error)
         hasError = true
@@ -66,6 +64,9 @@ export const productSearchTool = ({ uiStream, fullResponse }: ToolProps) => tool
             title: product.title,
             price: product.price,
             marketing_text: product.marketing_text,
+            category: product.category,
+            link: product.link,
+            link_image: product.link_image,
             description: product.description,
             product_specification: technical_specifications_needed ? product.product_specification : '', // Return empty string if technical specifications are not needed
           }
@@ -90,7 +91,7 @@ async function generateEmbedding(raw: string) {
 async function pgVectorSearch(
     query: string,
     maxResults: number = 10,
-    max_price: number = 3000,
+    max_price: number = 4500,
     category: string = ''
 ): Promise<ProductSearchResult[] | boolean> {
 
@@ -105,6 +106,13 @@ async function pgVectorSearch(
             vectorQuery
         )})`  
         
+        console.log(category)
+
+        // if category is gaming then search for PC Gaming
+        if (category === 'Gaming') {
+            category = 'PC Gaming'
+        }
+
         console.log(query)
         console.log(max_price)
         console.log(category)
@@ -123,7 +131,7 @@ async function pgVectorSearch(
                 product_specification: products.product_specification,  
                 similarity })
             .from(products)
-            .where(and(gt(similarity, 0.5), lte(products.price, max_price), eq(products.category, category)))
+            .where(and(gt(similarity, 0.3), lte(products.price, max_price), eq(products.category, category)))
             .orderBy((t) => desc(t.similarity))
             .limit(maxResults)
 
@@ -134,3 +142,13 @@ async function pgVectorSearch(
             throw error
         }
     }
+
+export function dataHelper(data: any) {
+  // Helper function to help AI search efficiently in the data
+   
+    if (data) {
+        return true
+    } else {
+        return false
+    }
+}

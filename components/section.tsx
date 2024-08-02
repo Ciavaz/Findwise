@@ -8,7 +8,8 @@ import {
   MessageCircleMore,
   Newspaper,
   Repeat2,
-  Search
+  Search,
+  Check
 } from 'lucide-react'
 import React from 'react'
 import { Separator } from './ui/separator'
@@ -45,11 +46,16 @@ export const Section: React.FC<SectionProps> = ({
     case 'Answer':
       icon = <BookCheck size={iconSize} className={iconClassName} />
       break
+    case 'Prodotti Per Te':
+      icon = <Check size={iconSize} className={iconClassName} />
     case 'Related':
       icon = <Repeat2 size={iconSize} className={iconClassName} />
       break
     case 'Follow-up':
       icon = <MessageCircleMore size={iconSize} className={iconClassName} />
+      break
+    case undefined:
+      icon = null
       break
     default:
       icon = <Search size={iconSize} className={iconClassName} />

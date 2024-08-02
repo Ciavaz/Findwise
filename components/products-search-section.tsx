@@ -41,11 +41,7 @@ export function ProductSearchSection({ query, productsResults }: ProductsSearchS
     <div>
       {!pending && data ? (
         <>
-          <Section size="sm" className="pt-2 pb-0">
-            <ToolBadge tool="search">{`${query}`}</ToolBadge>
-          </Section>
-
-          <Section title="Sources">
+          <Section title="Prodotti Per Te">
             <ProductCarousel productsResults={data} />
 
           </Section>
@@ -61,6 +57,27 @@ export function ProductSearchSection({ query, productsResults }: ProductsSearchS
 
 import { EmblaOptionsType } from 'embla-carousel'
 
+export function getLabelFromMarketingText(marketingText: string | null, category: string) {
+  if (marketingText) {
+    if (marketingText.includes(':')) {
+      marketingText = marketingText.split(':')[0]
+    }
+
+    if (marketingText.includes('----')) {
+      marketingText = marketingText.split('----')[0]
+    }
+    return marketingText.toUpperCase()
+  }
+  else {
+    if(category) {
+      return category.toUpperCase()
+    }
+    else {
+      return "Consigliato"
+    }
+  }
+
+  }
 
 export function ProductCarousel(
   { productsResults }: { productsResults: ProductSearchResult[] }) {
@@ -72,7 +89,7 @@ export function ProductCarousel(
       slidesToScroll: 'auto'
     }
 
-    
+    console.log(productsResults)
   return (
     <div className="mt-4">
     <Carousel className="relative" opts={OPTIONS}>
@@ -80,9 +97,9 @@ export function ProductCarousel(
       <CarouselContent className='w-60'>
         {productsResults.map((product, index) => (
           <CarouselItem key={index} className='mr-4'>
-            <div className="p-5 bg-white rounded-sm border border-gray-400">
-            <div className="border rounded border-red-500 bg-white text-gray-700 text-xs font-semibold p-2 w-fit">
-              <span className='line-clamp-1'>{product.marketing_text ? product.marketing_text.split(':')[0].split('----')[0].toUpperCase() : product.category.toUpperCase()}</span>
+            <div className="p-5 bg-white rounded-sm border border-gray-300">
+            <div className="border rounded-full	 border-red-500 bg-white text-gray-700 text-xs font-semibold p-1 w-fit  text-[10px]">
+              <span className='line-clamp-1'>{getLabelFromMarketingText(product.marketing_text , product.category)}</span>
             </div>
 
               <Image
@@ -92,12 +109,12 @@ export function ProductCarousel(
                 width={160}
                 height={160}
               />
-              <h2 className="text font-bold text-black mb-4 line-clamp-3">{product.title}</h2>
+              <h2 className="text font-bold text-black mb-4 line-clamp-2">{product.title}</h2>
               <p className="text-sm text-gray-600 mb-4 line-clamp-3">
                 {product.description?.slice(0, 100)}
               </p>
               <div className="w-full">
-              <span className="text-red-600 text-lg mt-4">{product?.price?.toFixed(2)} €</span>
+              <span className="text-red-700 text-lg mt-4">{product?.price?.toFixed(2)} €</span>
                 <Link target="_blank" href={product.link + "?utm=shopping_assistant" ?? ""} passHref>
                   <Button className="text-neutral-50 w-full rounded-md bg-red-500 hover:bg-red-700 px-4 py mt-4 font-bold flex items-center justify-between">
                     <div className="flex items-center" >
