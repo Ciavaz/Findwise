@@ -58,6 +58,9 @@ export function ProductSearchSection({ query, productsResults }: ProductsSearchS
 import { EmblaOptionsType } from 'embla-carousel'
 
 export function getLabelFromMarketingText(marketingText: string | null, category: string) {
+  // if marketing text is not null, return the first part of the string
+  // It is customised for the Mediaworld API
+  // If the marketing text is null, return the category
   if (marketingText) {
     if (marketingText.includes(':')) {
       marketingText = marketingText.split(':')[0]
@@ -89,7 +92,6 @@ export function ProductCarousel(
       slidesToScroll: 'auto'
     }
 
-    console.log(productsResults)
   return (
     <div className="mt-4">
     <Carousel className="relative" opts={OPTIONS}>

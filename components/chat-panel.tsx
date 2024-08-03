@@ -7,7 +7,7 @@ import { useUIState, useActions, useAIState } from 'ai/rsc'
 import { cn } from '@/lib/utils'
 import { UserMessage } from './user-message'
 import { Button } from './ui/button'
-import { ArrowRight, Plus } from 'lucide-react'
+import { ArrowRight, Plus, Search } from 'lucide-react'
 import { EmptyScreen } from './empty-screen'
 import Textarea from 'react-textarea-autosize'
 import { generateId } from 'ai'
@@ -99,7 +99,7 @@ export function ChatPanel({ messages, query }: ChatPanelProps) {
           disabled={isGenerating}
         >
           <span className="text-sm mr-2 group-hover:block hidden animate-in fade-in duration-300">
-            New
+            Nuova Chat
           </span>
           <Plus size={18} className="group-hover:rotate-90 transition-all" />
         </Button>
@@ -178,7 +178,7 @@ export function ChatPanel({ messages, query }: ChatPanelProps) {
             className="absolute right-2 top-1/2 transform -translate-y-1/2"
             disabled={input.length === 0}
           >
-            <ArrowRight size={20} />
+            <Search size={20} />
           </Button>
         </div>
         <EmptyScreen

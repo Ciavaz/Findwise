@@ -9,7 +9,9 @@ import {
   Newspaper,
   Repeat2,
   Search,
-  Check
+  Check,
+  BadgeCheck,
+  ShoppingCart
 } from 'lucide-react'
 import React from 'react'
 import { Separator } from './ui/separator'
@@ -27,9 +29,9 @@ export const Section: React.FC<SectionProps> = ({
   className,
   size = 'md',
   title,
-  separator = false
+  separator = true
 }) => {
-  const iconSize = 16
+  const iconSize = 18
   const iconClassName = 'mr-1.5 text-muted-foreground'
   let icon: React.ReactNode
   switch (title) {
@@ -46,9 +48,13 @@ export const Section: React.FC<SectionProps> = ({
     case 'Answer':
       icon = <BookCheck size={iconSize} className={iconClassName} />
       break
+    case 'Il Nostro Consiglio':
+      icon = <BadgeCheck size={iconSize} className={iconClassName} />
+      break
     case 'Prodotti Per Te':
-      icon = <Check size={iconSize} className={iconClassName} />
-    case 'Related':
+      icon = <ShoppingCart size={iconSize} className={iconClassName} />
+      break
+    case 'Potrebbe interessarti anche':
       icon = <Repeat2 size={iconSize} className={iconClassName} />
       break
     case 'Follow-up':
@@ -71,7 +77,7 @@ export const Section: React.FC<SectionProps> = ({
         )}
       >
         {title && (
-          <h2 className="flex items-center leading-none py-2">
+          <h2 className="flex items-center leading-none py-2 text-lg mb-1">
             {icon}
             {title}
           </h2>

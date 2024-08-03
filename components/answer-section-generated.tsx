@@ -10,7 +10,7 @@ export type AnswerSectionProps = {
 export function AnswerSectionGenerated({ result }: AnswerSectionProps) {
   return (
     <div>
-      <Section title="Answer">
+      <Section title="Il Nostro Consiglio">
         <BotMessage content={result} />
       </Section>
     </div>

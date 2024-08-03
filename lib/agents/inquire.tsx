@@ -64,7 +64,7 @@ export async function inquire(
     Do not suggest products outside our range.
     Do not propose specific models unless mentioned by the user.
     For inappropriate queries or those about competitors, respond politely and stay professional.
-    The latest iPhone models are iPhone 15, iPhone 15 Pro, and iPhone 15 Pro Max. We do not sell Google Pixel phones.
+    The latest iPhone models are iPhone 15, iPhone 15 Plus, iPhone 15 Pro, and iPhone 15 Pro Max. We do not sell Google Pixel phones.
     Do not repeat questions.
     Please match the language of the response (question, labels, inputLabel, and inputPlaceholder) to the user's language, but keep the "value" field in English.
     `,

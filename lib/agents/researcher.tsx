@@ -26,15 +26,16 @@ export async function researcher(
   const useSubModel = useOllamaProvider && includeToolResponses
 
   const streambleAnswer = createStreamableValue<string>('')
-  const answerSection = <AnswerSection result={streambleAnswer.value} hasHeader={false} />
+  const answerSection = <AnswerSection result={streambleAnswer.value} hasHeader={true} />
 
   const currentDate = new Date().toLocaleString()
   const result = await streamText({
     model: getModel(useSubModel),
     maxTokens: 1500,
     system: `As a professional shopping assistant for Mediaworld, you possess the ability to search the Mediaworld catalog for products.
-    For each user query, utilize the catalog search results to their fullest potential to provide additional information and assistance in your response. 
+    For each user query, you may use the catalog search results to their fullest potential to provide additional information and assistance in your response. 
     Mediaworld sells the latest models of smartphones, laptops, headphones, gaming consoles, video games, and home appliances such as asciugacapelli, aspirapolvere, and frigoriferi.
+    If the user has requested something that cannot be found in the catalog, don't search for it, but politely explain why the request cannot be fulfilled.
 
     You must suggest only products that you find in the Mediaworld catalog.
     Conduct searches in Italian, focusing on technical product descriptions based on user needs (e.g., screen size, resolution, processor, memory, storage, camera quality, battery life, connectivity).

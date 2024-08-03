@@ -73,7 +73,6 @@ export const productSearchTool = ({ uiStream, fullResponse }: ToolProps) => tool
         }
         )
       }
-
       return searchResult
     }
   })
@@ -107,12 +106,6 @@ async function pgVectorSearch(
         )})`  
         
         console.log(category)
-
-        // if category is gaming then search for PC Gaming
-        if (category === 'Gaming') {
-            category = 'PC Gaming'
-        }
-
         console.log(query)
         console.log(max_price)
         console.log(category)
