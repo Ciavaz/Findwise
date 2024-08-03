@@ -147,7 +147,7 @@ async function submit(
     // If not, update the UI with a div
     if (process.env.ANTHROPIC_API_KEY) {
       uiStream.update(
-        <AnswerSection result={streamText.value} hasHeader={false} />
+        <AnswerSection result={streamText.value} hasHeader={true} />
       )
     } else {
       uiStream.update(<div />)
@@ -403,7 +403,7 @@ export const getUIStateFromAIState = (aiState: Chat) => {
             case 'answer':
               return {
                 id,
-                component: <AnswerSection result={answer.value} hasHeader={false}/>
+                component: <AnswerSection result={answer.value} hasHeader={true}/>
               }
             case 'related':
               const relatedQueries = createStreamableValue()
