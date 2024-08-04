@@ -26,6 +26,9 @@ import { AnswerSection } from '@/components/answer-section'
 import { ErrorCard } from '@/components/error-card'
 import { ProductSearchSection } from '@/components/products-search-section'
 
+import { UserFeedback } from '@/components/feedback-section'
+
+
 import { use } from 'react'
 
 async function submit(
@@ -228,6 +231,10 @@ async function submit(
           }
         ]
       })
+
+      uiStream.append(
+        <UserFeedback groupID={groupeId} />
+      )
 
       // Generate related queries
       const relatedQueries = await querySuggestor(uiStream, processedMessages)

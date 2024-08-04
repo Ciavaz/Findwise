@@ -75,11 +75,11 @@ const processLinksAndButtons = (content: string) => {
 
   // Convert specific link to CTA button
   const convertToCTAButton = (url: string, text: string = 'Vai al prodotto') => {
-    return `<a href="${url}" target="_blank" className="flex items-center justify-center px-6 py-2 bg-red-500 text-white font-bold rounded-md hover:bg-red-700 transition-colors duration-300">
+    return `<a href="${url}" target="_blank" className="flex items-center justify-center px-6 py-2 mt-2 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold rounded-full hover:from-red-600 hover:to-red-700 transition transform hover:scale-105 shadow-lg">
     <svg className="w-6 h-6 text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4"/>
     </svg>
-      <span className="text-white">${text}</span>
+    <span className="text-white">${text}</span>
     </a>`;
   };
 
@@ -92,13 +92,30 @@ const processLinksAndButtons = (content: string) => {
     const [fullMatch, linkText, url] = match
     const updatedURL = addUTMParameters(url)
 
-    // Check if the link is a CTA link
-    if (url.includes('product')) {
+    if (url.includes('assets.mmsrg.com')) {
+      // it's an image link
+      const updatedLink = `[${linkText}](${updatedURL})`
+      updatedContent = updatedContent.replace(fullMatch, updatedLink)
+    } else if (url.includes('product')) {
       const ctaButton = convertToCTAButton(updatedURL)
+
+      if (linkText === 'Scopri di più') {
+        updatedContent = updatedContent.replace(fullMatch, ctaButton)
+      } else {
+        const updatedLink = `[${linkText}](${updatedURL})`
+        updatedContent = updatedContent.replace(`${fullMatch}.`, `${linkText}. ${ctaButton}`)
+      }
+
       updatedContent = updatedContent.replace(fullMatch, ctaButton)
     } else {
       const updatedLink = `[${linkText}](${updatedURL})`
       updatedContent = updatedContent.replace(fullMatch, updatedLink)
+
+      // If the link text is not "Scopri di più", add the CTA button after the period
+      if (linkText !== 'Scopri di più') {
+        const ctaButton = convertToCTAButton(updatedURL, 'Vai al prodotto')
+        updatedContent = updatedContent.replace(`${updatedLink}.`, `${updatedLink}. ${ctaButton}`)
+      }
     }
   }
 

@@ -99,3 +99,21 @@ export async function shareChat(id: string, userId: string = 'anonymous') {
 
   return payload
 }
+
+export async function saveUserFeedback(
+  chatId: string,
+  groupID: string,
+  feedback: boolean,
+  userId: string = 'anonymous'
+)
+{
+  //  from current urls /search/zOKLw9i get the last part of the url
+
+  const pipeline = redis.pipeline()
+  pipeline.hmset(`feedback:${chatId}`, {
+    groupID,
+    feedback,
+    userId
+  })
+  await pipeline.exec()
+}
