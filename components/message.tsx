@@ -100,7 +100,9 @@ const processLinksAndButtons = (content: string) => {
       const ctaButton = convertToCTAButton(updatedURL)
 
       if (linkText === 'Scopri di più') {
-        updatedContent = updatedContent.replace(fullMatch, ctaButton)
+        // check if after the fullMatch there is a period
+        const nextChar = content.charAt(content.indexOf(fullMatch) + fullMatch.length)
+        updatedContent = updatedContent.replace(nextChar === '.' ? fullMatch + '.' : fullMatch, ctaButton)
       } else {
         const updatedLink = `[${linkText}](${updatedURL})`
         updatedContent = updatedContent.replace(`${fullMatch}.`, `${linkText}. ${ctaButton}`)

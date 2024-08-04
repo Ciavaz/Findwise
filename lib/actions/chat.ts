@@ -4,6 +4,9 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { type Chat } from '@/lib/types'
 import { Redis } from '@upstash/redis'
+import { db } from '@/lib/drizzle/db'
+import { chatSessions, NewChatSession } from '@/lib/drizzle/schema'
+
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL || '',
@@ -17,9 +20,10 @@ export async function getChats(userId?: string | null) {
 
   try {
     const pipeline = redis.pipeline()
-    const chats: string[] = await redis.zrange(`user:chat:${userId}`, 0, -1, {
+    const chats: string[] = await redis.zrange(`user:chat:${userId}`, 0, 2, {
       rev: true
     })
+
 
     for (const chat of chats) {
       pipeline.hgetall(chat)
@@ -102,7 +106,7 @@ export async function shareChat(id: string, userId: string = 'anonymous') {
 
 export async function saveUserFeedback(
   chatId: string,
-  groupID: string,
+  groupeId: string,
   feedback: boolean,
   userId: string = 'anonymous'
 )
@@ -111,9 +115,24 @@ export async function saveUserFeedback(
 
   const pipeline = redis.pipeline()
   pipeline.hmset(`feedback:${chatId}`, {
-    groupID,
+    chatId,
+    groupeId,
     feedback,
     userId
   })
   await pipeline.exec()
+}
+
+export async function trackChatSession(chatId: string, groupeId: string) {
+  // track on db the number of messages sent by the user, save it on the chat_sessions table
+  const newChatSessios: NewChatSession = {
+    id: chatId,
+    groupe_id: groupeId
+  }
+  try {
+    await db.insert(chatSessions).values(newChatSessios)
+
+  } catch (error) {
+    console.error(error)
+  }
 }

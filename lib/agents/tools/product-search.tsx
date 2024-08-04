@@ -1,7 +1,7 @@
 import { tool, embed } from 'ai'
 import { createStreamableValue } from 'ai/rsc'
 import { productSearchSchema } from '@/lib/schema/product-search'
-import { products, SelectProducts } from '@/lib/drizzle/products'
+import { products, SelectProducts } from '@/lib/drizzle/schema'
 import { ProductSearchSection } from '@/components/products-search-section'
 import { getModelForEmbedding } from '../../utils'
 import { desc, asc, sql, cosineDistance, gt, lte, like, and, max, eq } from 'drizzle-orm'
@@ -9,7 +9,6 @@ import { db } from '@/lib/drizzle/db'
 import { ProductSearchResult } from '@/lib/types'
 
 import { ToolProps } from '.'
-import { ZodEnum } from 'zod'
 
 export const productSearchTool = ({ uiStream, fullResponse }: ToolProps) => tool({
     description: 'Search the Mediaworld Catalog for products',

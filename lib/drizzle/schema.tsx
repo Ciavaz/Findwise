@@ -1,3 +1,4 @@
+import { group } from 'console'
 import {
     boolean,
     index,
@@ -55,3 +56,15 @@ import {
   )
   
   export type SelectProducts = typeof products.$inferSelect
+
+
+  export const chatSessions = pgTable(
+    'chat_sessions',
+    {
+      id: text('id').notNull(),
+      groupe_id: text('groupe_id').notNull(),
+    },
+  )
+  
+  export type SelectChatSessions = typeof chatSessions.$inferSelect
+  export type NewChatSession = typeof chatSessions.$inferInsert

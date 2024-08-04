@@ -12,7 +12,7 @@ import { Section } from '@/components/section'
 import { FollowupPanel } from '@/components/followup-panel'
 import { inquire, researcher, taskManager, querySuggestor } from '@/lib/agents'
 import { writer } from '@/lib/agents/writer'
-import { saveChat } from '@/lib/actions/chat'
+import { saveChat, trackChatSession } from '@/lib/actions/chat'
 import { Chat } from '@/lib/types'
 import { AIMessage } from '@/lib/types'
 import { UserMessage } from '@/components/user-message'
@@ -233,7 +233,7 @@ async function submit(
       })
 
       uiStream.append(
-        <UserFeedback groupID={groupeId} />
+        <UserFeedback groupeId={groupeId} />
       )
 
       // Generate related queries
@@ -332,6 +332,13 @@ export const AI = createAI<AIState, UIState>({
     if (!state.messages.some(e => e.type === 'answer')) {
       return
     }
+    
+    // Check if the number of input messages is equal to the number of answer messages
+    const inputCount = state.messages.filter(e => e.type === 'input' || e.type === 'input_related').length;
+    const answerCount = state.messages.filter(e => e.type === 'answer').length;
+    if (inputCount !== answerCount) {
+      return;
+    }
 
     const { chatId, messages } = state
     const createdAt = new Date()
@@ -361,7 +368,19 @@ export const AI = createAI<AIState, UIState>({
       title,
       messages: updatedMessages
     }
+    
     await saveChat(chat)
+
+    // why i update chat every time i get a message? I want to resave once the user has finished the chat
+    
+
+    // check if uiState is done
+    if (updatedMessages[updatedMessages.length - 1].type === 'end' && done) {
+      const lastGroupId = updatedMessages
+      .filter(message => message.role === 'user' && message.type === 'input')
+      .reduce((groupId, message) => message.id, '')
+      await trackChatSession(chatId, lastGroupId);
+    }
   }
 })
 
