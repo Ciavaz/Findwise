@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { saveUserFeedback } from '../lib/actions/chat';
 import { usePathname } from 'next/navigation'
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
-import { Separator } from '@radix-ui/react-separator';
+
 export type UserFeedbackProps = {
   groupeId: string;
 };
@@ -19,18 +19,18 @@ export function UserFeedback({groupeId}: UserFeedbackProps) {
       return;
     }
     saveUserFeedback(chatID, groupeId, value);
-
+  
     setFeedbackSubmitted(true);
-  }, [groupeId]);
+  }, [groupeId, chatID]);
   
   return (
     <div className="mt-4 mb-2">
       <hr className="border-blue-100" /> {/* Minimal separator line */}
       <div className="flex items-center justify-between space-x-2 pt-2">
-        <label className="flex-grow text-left text-sm">Ti è stato d'aiuto?</label>
+        <label className="flex-grow text-left text-sm">Ti è stato di aiuto?</label>
         <div className="flex space-x-4">
           {feedbackSubmitted ? (
-            <p className="text-gray-500 transition text-sm">Grazie del feedback! 😊</p>
+            <p className="text-gray-500 transition text-sm">Grazie del feedback!</p>
           ) : (
             <>
               <button
