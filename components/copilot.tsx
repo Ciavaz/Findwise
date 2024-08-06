@@ -165,7 +165,7 @@ export const Copilot: React.FC<CopilotProps> = ({ inquiry }: CopilotProps) => {
                 name="additional_query"
                 className="w-full"
                 id="query"
-                maxLength={120}
+                maxLength={128}
                 placeholder={object?.inputPlaceholder}
                 value={query}
                 onChange={handleInputChange}

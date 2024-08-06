@@ -12,7 +12,7 @@ import { Section } from '@/components/section'
 import { FollowupPanel } from '@/components/followup-panel'
 import { inquire, researcher, taskManager, querySuggestor } from '@/lib/agents'
 import { writer } from '@/lib/agents/writer'
-import { saveChat, trackChatSession } from '@/lib/actions/chat'
+import { saveChat, trackChatSession, checkRateLimit } from '@/lib/actions/chat'
 import { Chat } from '@/lib/types'
 import { AIMessage } from '@/lib/types'
 import { UserMessage } from '@/components/user-message'
@@ -277,7 +277,20 @@ async function submit(
     uiStream.done()
   }
 
-  processEvents()
+  // Apply rate limit
+  if (await checkRateLimit())
+    processEvents()
+  else {
+    aiState.done(aiState.get())
+    uiStream.append(
+      <ErrorCard
+        errorMessage={'Hai superato il limite di richieste, riprova più tardi.'}
+      />
+    )
+    isGenerating.done(false)
+    uiStream.done()
+    isCollapsed.done(false)
+  }
 
   return {
     id: generateId(),

@@ -49,6 +49,7 @@ export function FollowupPanel() {
         name="input"
         placeholder="Cosa stai cercando?"
         value={input}
+        maxLength={128}
         className="pr-14 h-12"
         onChange={e => setInput(e.target.value)}
       />

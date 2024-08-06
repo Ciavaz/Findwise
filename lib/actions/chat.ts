@@ -6,6 +6,7 @@ import { type Chat } from '@/lib/types'
 import { Redis } from '@upstash/redis'
 import { db } from '@/lib/drizzle/db'
 import { chatSessions, NewChatSession } from '@/lib/drizzle/schema'
+import { Ratelimit } from "@upstash/ratelimit";
 
 
 const redis = new Redis({
@@ -135,4 +136,27 @@ export async function trackChatSession(chatId: string, groupeId: string) {
   } catch (error) {
     console.error(error)
   }
+}
+
+export async function checkRateLimit() {
+  // check if the user has reached the rate limit of messages sent
+  // if the user has reached the limit, return a message to the user
+  // if the user has not reached the limit, return the chat session
+  const ratelimit = new Ratelimit({
+    redis: redis,
+    limiter: Ratelimit.slidingWindow(10, "30 s"),
+  });
+   
+  // Use a constant string to limit all requests with a single ratelimit
+  // Or use a userID, apiKey or ip address for individual limits.
+  const identifier = "ip";
+  const { success } = await ratelimit.limit(identifier);
+   
+  if (!success) {
+    return false
+  } else {
+    return true
+  }
+
+
 }

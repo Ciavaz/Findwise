@@ -50,7 +50,7 @@ export const ErrorCard: React.FC<ErrorCardProps> = ({ errorMessage }) => {
         <Label>{errorMessage}</Label>
         <Button size="sm" className="w-fit" type="submit">
           <RefreshCcw size={14} className="mr-1" />
-          Retry
+          Riprova
         </Button>
       </form>
     </Card>
