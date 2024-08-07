@@ -123,10 +123,6 @@ async function pgVectorSearch(
             .orderBy((t) => desc(t.similarity))
             .limit(maxResults)
         
-        if (max_price != 4500) {
-          // order by price descending if max_price is set
-          productsResults.sort((a, b) => a.price - b.price)
-        }
         return productsResults
 
         } catch (error) {
