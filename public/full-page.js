@@ -3,9 +3,10 @@
         <style>
             .responsive-iframe-container {
                 position: relative;
-                width: 100%;
+                width: 80%;
                 height: 100%;
                 overflow: hidden;
+                margin: 0 auto; /* Center the container */
             }
             .responsive-iframe-container iframe {
                 position: absolute;
@@ -14,6 +15,11 @@
                 width: 100%;
                 height: 100%;
                 border: 0;
+            }
+            @media (max-width: 768px) {
+                .responsive-iframe-container {
+                    width: 100%;
+                }
             }
         </style>
     `;
