@@ -38,7 +38,7 @@ export function UserFeedback({groupeId}: UserFeedbackProps) {
                 className="flex flex-col items-center text-gray-700 hover:text-green-600 transition"
               >
                 <ThumbsUp className="w-4 h-4" />
-                <span className="text-sm">Yes</span>
+                <span className="text-sm">Si</span>
               </button>
               <button
                 onClick={() => handleUserFeedback(false)}

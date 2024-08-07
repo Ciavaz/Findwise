@@ -20,10 +20,12 @@
 
     function createResponsiveIframe() {
         const iframeContainer = document.createElement("div");
-        iframeContainer.className = "responsive-iframe-container";
+        iframeContainer.className = "responsive-iframe-container container";
         iframeContainer.innerHTML = `
             <iframe src="https://findwise.vercel.app/" frameborder="0" allowfullscreen></iframe>
         `;
+
+        
 
         document.head.insertAdjacentHTML("beforeend", styleTag);
         return iframeContainer;

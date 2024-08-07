@@ -2,7 +2,7 @@ import { DeepPartial } from 'ai'
 import { z } from 'zod'
 
 export const productSearchSchema = z.object({
-  query: z.string().describe('The query to search for'),
+  query: z.string().describe('The query to search for, the more specific the better'),
   max_price: z.number().optional().describe('The maximum price of the product the user is willing to pay'),
   category: z.enum([
     'TV e Home Cinema',

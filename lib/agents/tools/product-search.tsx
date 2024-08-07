@@ -103,11 +103,7 @@ async function pgVectorSearch(
             products.embedding,
             vectorQuery
         )})`  
-        
-        console.log(category)
-        console.log(query)
-        console.log(max_price)
-        console.log(category)
+
 
         const productsResults = await db
             .select({ 
@@ -126,7 +122,11 @@ async function pgVectorSearch(
             .where(and(gt(similarity, 0.3), lte(products.price, max_price), eq(products.category, category)))
             .orderBy((t) => desc(t.similarity))
             .limit(maxResults)
-
+        
+        if (max_price != 4500) {
+          // order by price descending if max_price is set
+          productsResults.sort((a, b) => a.price - b.price)
+        }
         return productsResults
 
         } catch (error) {
