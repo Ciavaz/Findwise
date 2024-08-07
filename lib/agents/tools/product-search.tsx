@@ -17,7 +17,8 @@ export const productSearchTool = ({ uiStream, fullResponse }: ToolProps) => tool
       query,
       max_price,
       category,
-      technical_specifications_needed
+      technical_specifications_needed,
+      technical_specifications
     }) => {
       let hasError = false
       // Append the search section
@@ -32,7 +33,7 @@ export const productSearchTool = ({ uiStream, fullResponse }: ToolProps) => tool
       // Tavily API requires a minimum of 5 characters in the query
       let searchResult
       try {
-        searchResult = await pgVectorSearch(query, 10, max_price, category ? category : '')     
+        searchResult = await pgVectorSearch(query, 10, max_price, category ? category : '', technical_specifications_needed, technical_specifications)     
       } catch (error) {
         console.error('Search API error:', error)
         hasError = true
@@ -90,15 +91,23 @@ async function pgVectorSearch(
     query: string,
     maxResults: number = 10,
     max_price: number = 4500,
-    category: string = ''
+    category: string = '',
+    technical_specifications_needed: boolean = false,
+    technical_specifications: string = ''
 ): Promise<ProductSearchResult[] | boolean> {
 
     try {
         if (query.trim().length === 0) return false
-    
+
+        if (technical_specifications_needed && technical_specifications != '') {
+            query = `${query}. Descrizione tecnica del prodotto: ${technical_specifications}`
+        }
+        
+        console.log(technical_specifications)
         const embedding = await generateEmbedding(query)
         const vectorQuery = `[${embedding.join(',')}]`
-    
+        
+        console.log('query:', query)
         const similarity = sql<number>`1 - (${cosineDistance(
             products.embedding,
             vectorQuery

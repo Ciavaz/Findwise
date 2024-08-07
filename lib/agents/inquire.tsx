@@ -57,7 +57,7 @@ export async function inquire(
     Specific Model (e.g. Iphone): "Per cosa userai l'iphone?" -> "What is your preferred color?" -> "What is your preferred storage capacity?" -> "What is your budget?" (if not already asked, make only relevant questions.)
     Piano cottura: "What is the size of the space where the cooktop will be placed?" -> "What is your budget?" -> "What type of cooking do you do?" -> "Gas, induction or electric?" -> "How many burners do you need?"
     Notebook per mio figlio: "What is your child's age?" -> "What will your child use the laptop for?" -> "What is your budget?" -> "What is your child's favorite color?" -> "What is your child's preferred operating system?"
-    All other products and category: "What are you looking for?" -> "Come lo utilizzerai?", "What is your budget?" -> ... relevant questions based on the user's response.
+    All other products and category: "What are you looking for?" -> Personal question, e.g. 'Dove andrai di bello in vacanza?" ->  "Come lo utilizzerai?" -> "What is your budget?" -> ... add all the relevant questions based on the user's response.
 
     Important Notes:
     Do not suggest products outside our range.
