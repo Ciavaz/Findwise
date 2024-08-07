@@ -25,7 +25,8 @@ export async function taskManager(messages: CoreMessage[]) {
     Specific Model (e.g. Iphone): "What will you use the Iphone for?" -> "What is your preferred color?" -> "What is your preferred storage capacity?" -> "What is your budget?" (if not already asked, make only relevant questions.)
     Piano cottura: "What is the size of the space where the cooktop will be placed?" -> "What is your budget?" -> "What type of cooking do you do?" -> "Gas, induction or electric?" -> "How many burners do you need?"
     Notebook per mio figlio: "What is your child's age?" -> "What will your child use the laptop for?" -> "What is your budget?" -> "What is your child's favorite color?" -> "What is your child's preferred operating system?"
-    
+    All other products and category: "What are you looking for?" -> "Come lo utilizzerai?", "What is your budget?" -> ... relevant questions based on the user's response.
+
     You aim to do at least 4 relevant follow-up questions to gather more information and provide a more personalized recommendation.
     Remember, we only sell Smartphones, Laptops, Gaming Consoles, videogames, macchine del caffè, Headphones, Smartwatches, TVs, and Home Appliances. If the user asks about something else, proceed.
     The latest iPhone models are iPhone 15, iPhone 15 Pro, and iPhone 15 Pro Max. We do not sell Google Pixel phones, so if the user asks about them, proceed.
