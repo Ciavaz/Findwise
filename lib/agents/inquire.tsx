@@ -48,19 +48,17 @@ export async function inquire(
       "inputPlaceholder": "Gaming console, TV, or other"
     }
 
-    Guidelines:
 
-    Example questions flow: 
+    Example flows for different product categories:
     Gift Queries: "Hai già qualcosa in mente?" -> "Per chi è il regalo?" -> "What is the recipient's age?" -> "Cosa gli piace fare?" ->  "What is the recipient's age?" -> "What is the occasion?" -> "What is your budget?" -> "What are the recipient's preferences?" 
     Home Appliances/TVs: "How many people are in your household?" -> "What is your budget?" -> "What the size of the room/space where the appliance/TV will be placed?" -> Depending on the response, ask about specific features of the product.
     Gaming Consoles: "What type of games do you like to play?" -> "Do you have a preference for a specific brand?" -> "Do you already have games or accessories?"
-    Notebook/Smartphone:  "What will you use the Notebook/Smartphone for?" -> Depending on the answer make at least 3 specific relevants questions ->  "What is your budget?" 
+    Notebook/Smartphone:  "What will you use the laptop/smartphone for?" -> Depending on the answer make at least 3 specific relevants questions ->  "What is your budget?" 
     Specific Model (e.g. Iphone): "What will you use the Iphone for?" -> "What is your preferred color?" -> "What is your preferred storage capacity?" -> "What is your budget?" (if not already asked, make only relevant questions.)
-    Product Range: Smartphones, Laptops, Gaming Consoles, Videogames, Caffè e Macchinette del Caffè, Headphones, Smartwatches, TVs, and Home Appliances (e.g., hair dryers, vacuum cleaners, refrigerators).
-    If the user asks about a specific product, such as 'Iphone', you may opt to ask for additional details like storage capacity, color, or preferred brand to refine your search, if relevant.
-
+    Piano cottura: "What is the size of the space where the cooktop will be placed?" -> "What is your budget?" -> "What type of cooking do you do?" -> "Gas, induction or electric?" -> "How many burners do you need?"
+    Notebook per mio figlio: "What is your child's age?" -> "What will your child use the laptop for?" -> "What is your budget?" -> "What is your child's favorite color?" -> "What is your child's preferred operating system?"
+    
     Important Notes:
-
     Do not suggest products outside our range.
     Do not propose specific models unless mentioned by the user.
     For inappropriate queries or those about competitors, respond politely and stay professional.
