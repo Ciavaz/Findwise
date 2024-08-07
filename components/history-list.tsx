@@ -29,7 +29,7 @@ export async function HistoryList({ userId }: HistoryListProps) {
           )
         )}
       </div>
-      <div className="mt-auto">
+      <div className="mt-auto hidden">
         <ClearHistory empty={!chats?.length} />
       </div>
     </div>
