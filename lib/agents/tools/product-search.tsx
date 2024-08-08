@@ -4,7 +4,7 @@ import { productSearchSchema } from '@/lib/schema/product-search'
 import { products, SelectProducts } from '@/lib/drizzle/schema'
 import { ProductSearchSection } from '@/components/products-search-section'
 import { getModelForEmbedding } from '../../utils'
-import { desc, asc, sql, cosineDistance, gt, lte, like, and, max, eq } from 'drizzle-orm'
+import { desc, asc, sql, cosineDistance, gt, lte, gte, and, eq } from 'drizzle-orm'
 import { db } from '@/lib/drizzle/db'
 import { ProductSearchResult } from '@/lib/types'
 
@@ -15,6 +15,7 @@ export const productSearchTool = ({ uiStream, fullResponse }: ToolProps) => tool
     parameters: productSearchSchema,
     execute: async ({
       query,
+      min_price,
       max_price,
       category,
       technical_specifications_needed,
@@ -33,24 +34,25 @@ export const productSearchTool = ({ uiStream, fullResponse }: ToolProps) => tool
       // Tavily API requires a minimum of 5 characters in the query
       let searchResult
       try {
-        searchResult = await pgVectorSearch(query, 10, max_price, category ? category : '', technical_specifications_needed, technical_specifications)     
+        searchResult = await pgVectorSearch(query, 10, min_price, max_price, category ? category : '', technical_specifications_needed, technical_specifications)     
       } catch (error) {
         console.error('Search API error:', error)
         hasError = true
       }
       
       if (!searchResult) {
+        console.log("Niente")
         fullResponse = `Nessun prodotto trovato per la ricerca "${query}.`
         uiStream.update(null)
         streamResults.done()
-        return searchResult
+        return fullResponse
       }
 
       if (hasError) {
-        fullResponse = `An error occurred while searching for "${query}.`
+        fullResponse = `Mi dispiace abbiamo avuto un errore cercando "${query}.`
         uiStream.update(null)
         streamResults.done()
-        return searchResult
+        return fullResponse
       }
       
       streamResults.done(searchResult as ProductSearchResult[])
@@ -90,6 +92,7 @@ async function generateEmbedding(raw: string) {
 async function pgVectorSearch(
     query: string,
     maxResults: number = 10,
+    min_price: number = 0,
     max_price: number = 4500,
     category: string = '',
     technical_specifications_needed: boolean = false,
@@ -100,14 +103,12 @@ async function pgVectorSearch(
         if (query.trim().length === 0) return false
 
         if (technical_specifications_needed && technical_specifications != '') {
-            query = `${query}. Descrizione tecnica del prodotto: ${technical_specifications}`
+            query = `Prodotto Ricercato: ${query}. Descrizione tecnica del prodotto: ${technical_specifications}`
         }
         
-        console.log(technical_specifications)
         const embedding = await generateEmbedding(query)
         const vectorQuery = `[${embedding.join(',')}]`
         
-        console.log('query:', query)
         const similarity = sql<number>`1 - (${cosineDistance(
             products.embedding,
             vectorQuery
@@ -128,10 +129,13 @@ async function pgVectorSearch(
                 product_specification: products.product_specification,  
                 similarity })
             .from(products)
-            .where(and(gt(similarity, 0.3), lte(products.price, max_price), eq(products.category, category)))
+            .where(and(gt(similarity, 0.38), gte(products.total_availability, 1), gte(products.price, min_price), lte(products.price, max_price), eq(products.category, category)))
             .orderBy((t) => desc(t.similarity))
             .limit(maxResults)
         
+        if (productsResults.length === 0) {
+          return false
+        }
         return productsResults
 
         } catch (error) {
@@ -141,8 +145,7 @@ async function pgVectorSearch(
     }
 
 export function dataHelper(data: any) {
-  // Helper function to help AI search efficiently in the data
-   
+  // Helper function to help AI search efficiently in the dataå
     if (data) {
         return true
     } else {

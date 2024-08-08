@@ -3,6 +3,7 @@ import { z } from 'zod'
 
 export const productSearchSchema = z.object({
   query: z.string().describe('The keywords that completily identify the product that you want to suggest to the user ensuring no mismatch, e.g. "Iphone 15 Pro Max 512GB" or "Macchina fotografica reflex per paesaggi"'),
+  min_price: z.number().optional().default(0).describe('The minimum price of the product the user is willing to pay or relevant to the product searched'),
   max_price: z.number().optional().describe('The maximum price of the product the user is willing to pay'),
   category: z.enum([
     'TV e Home Cinema',
