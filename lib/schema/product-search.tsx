@@ -2,9 +2,9 @@ import { DeepPartial } from 'ai'
 import { z } from 'zod'
 
 export const productSearchSchema = z.object({
-  query: z.string().describe('The keywords that completily identify the product that you want to suggest to the user ensuring no mismatch, e.g. "Iphone 15 Pro Max 512GB" or "Macchina fotografica reflex per paesaggi"'),
-  min_price: z.number().optional().default(0).describe('The minimum price of the product the user is willing to pay or relevant to the product searched'),
-  max_price: z.number().optional().describe('The maximum price of the product the user is willing to pay'),
+  query: z.string().describe('Keywords that precisely identify the product to suggest to the user, ensuring no mismatch. For example, "iPhone 15 Pro Max 512GB" or "Fotocamera Reflex"'),
+  min_price: z.number().optional().default(0).describe('The minimum price the user is willing to pay or relevant to the product being searched to filter the results.'),
+  max_price: z.number().optional().describe('The maximum price the user is willing to pay for the product.'),
   category: z.enum([
     'TV e Home Cinema',
     'Audio, Cuffie e Navigatori',
@@ -23,8 +23,8 @@ export const productSearchSchema = z.object({
     'Gaming',
     'Console e Videogiochi'
   ]).describe('The category of the product the user is searching for'),
-  technical_specifications_needed: z.boolean().describe('Whether technical specifications for the products are relavant to anwer the user needs'),
-  technical_specifications: z.string().optional().describe('The technical specifications of the product to satisfy the user needs, suggest the specifications that are relevant to the user query'),
+  technical_specifications_needed: z.boolean().describe('Indicates whether detailed technical specifications are necessary to meet the user’s needs.'),
+  technical_specifications: z.string().optional().describe('The relevant technical specifications required to satisfy the user’s query, focusing on what matters most to their needs. For example, if the user is searching for a laptop, you might specify "16GB RAM, 512GB SSD, Intel i7 processor, 15-inch display".'),
 })
 
 export type PartialInquiry = DeepPartial<typeof productSearchSchema>

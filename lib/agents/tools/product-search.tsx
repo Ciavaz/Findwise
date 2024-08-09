@@ -102,8 +102,8 @@ async function pgVectorSearch(
     try {
         if (query.trim().length === 0) return false
 
-        if (technical_specifications_needed && technical_specifications != '') {
-            query = `Prodotto Ricercato: ${query}. Descrizione tecnica del prodotto: ${technical_specifications}`
+        if (technical_specifications != '') {
+            query = `Prodotto Ricercato: ${query}. Specifiche del prodotto: ${technical_specifications}`
         }
         
         const embedding = await generateEmbedding(query)
@@ -129,7 +129,7 @@ async function pgVectorSearch(
                 product_specification: products.product_specification,  
                 similarity })
             .from(products)
-            .where(and(gt(similarity, 0.38), gte(products.total_availability, 1), gte(products.price, min_price), lte(products.price, max_price), eq(products.category, category)))
+            .where(and(gt(similarity, 0.3), gte(products.total_availability, 1), gte(products.price, min_price), lte(products.price, max_price), eq(products.category, category), sql`to_tsvector('italian', ${products.product_specification}) @@ to_tsquery('italian', ${query})`))
             .orderBy((t) => desc(t.similarity))
             .limit(maxResults)
         

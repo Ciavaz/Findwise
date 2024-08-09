@@ -13,20 +13,15 @@ import {
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBag, ArrowBigRightDash } from 'lucide-react';
-import { ToolBadge } from './tool-badge'
+import { ArrowBigRightDash } from 'lucide-react';
 import type { ProductSearchResult } from '@/lib/types'
 import { StreamableValue, useStreamableValue } from 'ai/rsc'
-import { json } from 'drizzle-orm/mysql-core'
-
 
 function titleCase(str: string) {
   return str.toLowerCase().split(' ').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
 }
-
-
 
 export type ProductsSearchSectionProps = {
   query?: string
