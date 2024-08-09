@@ -106,6 +106,7 @@ async function pgVectorSearch(
             query = `Prodotto Ricercato: ${query}. Specifiche del prodotto: ${technical_specifications}`
         }
         console.log(query)
+        console.log(category)
         const embedding = await generateEmbedding(query)
         const vectorQuery = `[${embedding.join(',')}]`
         
@@ -133,10 +134,35 @@ async function pgVectorSearch(
             .where(and(gt(similarity, 0.4), gte(products.total_availability, 1), gte(products.price, min_price), lte(products.price, max_price), eq(products.category, category)))
             .orderBy((t) => desc(t.similarity))
             .limit(maxResults)
-
+        
+        
         if (productsResults.length === 0) {
-          return false
+          const productsResults = await db
+            .select({ 
+                id: products.id,
+                title: products.title,
+                price: products.price,
+                link: products.link,
+                link_image: products.image_link,
+                category: products.category,
+                marketing_text: products.marketing_text,
+                breadcrumb_all : products.breadcrumb_all,
+                description: products.description,
+                product_specification: products.product_specification,  
+                similarity, 
+              })
+            .from(products)
+            .where(and(gt(similarity, 0.35), gte(products.total_availability, 1), gte(products.price, min_price), lte(products.price, max_price)))
+            .orderBy((t) => desc(t.similarity))
+            .limit(maxResults)
+
+            if (productsResults.length === 0) {
+              return false
+            } else {
+              return productsResults
+            }
         }
+      
         return productsResults
 
         } catch (error) {
