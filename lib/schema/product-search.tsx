@@ -2,7 +2,7 @@ import { DeepPartial } from 'ai'
 import { z } from 'zod'
 
 export const productSearchSchema = z.object({
-  query: z.string().describe('Keywords that precisely identify the product to suggest to the user, ensuring no mismatch. For example, "iPhone 15 Pro Max 512GB" or "Fotocamera Reflex"'),
+  query: z.string().describe('Keywords that precisely identify the product to suggest to the user, ensuring no mismatch. For example, "iPhone 15 Pro Max 512GB" or "Rasoio elettrico con shaving system a lamina, ricaricabile".'),
   min_price: z.number().optional().default(0).describe('The minimum price the user is willing to pay or relevant to the product being searched to filter the results.'),
   max_price: z.number().optional().describe('The maximum price the user is willing to pay for the product.'),
   category: z.enum([

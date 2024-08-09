@@ -105,7 +105,7 @@ async function pgVectorSearch(
         if (technical_specifications != '') {
             query = `Prodotto Ricercato: ${query}. Specifiche del prodotto: ${technical_specifications}`
         }
-        
+        console.log(query)
         const embedding = await generateEmbedding(query)
         const vectorQuery = `[${embedding.join(',')}]`
         
@@ -114,7 +114,7 @@ async function pgVectorSearch(
             vectorQuery
         )})`  
 
-
+        console.log(category)
         const productsResults = await db
             .select({ 
                 id: products.id,
@@ -127,12 +127,13 @@ async function pgVectorSearch(
                 breadcrumb_all : products.breadcrumb_all,
                 description: products.description,
                 product_specification: products.product_specification,  
-                similarity })
+                similarity, 
+              })
             .from(products)
-            .where(and(gt(similarity, 0.3), gte(products.total_availability, 1), gte(products.price, min_price), lte(products.price, max_price), eq(products.category, category), sql`to_tsvector('italian', ${products.text}) @@ websearch_to_tsquery('italian', ${query})`))
+            .where(and(gt(similarity, 0.4), gte(products.total_availability, 1), gte(products.price, min_price), lte(products.price, max_price), eq(products.category, category)))
             .orderBy((t) => desc(t.similarity))
             .limit(maxResults)
-        
+
         if (productsResults.length === 0) {
           return false
         }
