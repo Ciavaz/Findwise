@@ -129,7 +129,7 @@ async function pgVectorSearch(
                 product_specification: products.product_specification,  
                 similarity })
             .from(products)
-            .where(and(gt(similarity, 0.3), gte(products.total_availability, 1), gte(products.price, min_price), lte(products.price, max_price), eq(products.category, category), sql`to_tsvector('italian', ${products.product_specification}) @@ to_tsquery('italian', ${query})`))
+            .where(and(gt(similarity, 0.3), gte(products.total_availability, 1), gte(products.price, min_price), lte(products.price, max_price), eq(products.category, category), sql`to_tsvector('italian', ${products.text}) @@ websearch_to_tsquery('italian', ${query})`))
             .orderBy((t) => desc(t.similarity))
             .limit(maxResults)
         

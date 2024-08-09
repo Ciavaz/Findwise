@@ -86,6 +86,11 @@ export function ProductCarousel(
       loop: true,
       slidesToScroll: 'auto'
     }
+  
+  // check if it is an array to prevent errors.
+  if (!Array.isArray(productsResults)) {
+    return null
+  }
 
   return (
     <div className="mt-4">
